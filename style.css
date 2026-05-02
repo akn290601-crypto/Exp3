@@ -1,0 +1,170 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  text-align: center;
+  padding: 40px;
+  background: #16213e;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  width: 360px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  color: #e94560;
+  margin-bottom: 28px;
+  letter-spacing: 0.05em;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #0f3460;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background: #1a4a7a;
+  color: #eee;
+}
+
+.tab.active {
+  background: #e94560;
+  color: #fff;
+}
+
+.timer-display {
+  margin: 24px 0;
+}
+
+#time {
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn-primary:active, .btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #e94560;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: #0f3460;
+  color: #aaa;
+}
+
+.btn-secondary:hover {
+  background: #1a4a7a;
+  color: #eee;
+}
+
+.pomodoro-count {
+  margin-top: 36px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+#count {
+  font-weight: 700;
+  color: #e94560;
+}
+
+#dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e94560;
+}
+
+.dot.empty {
+  background: #0f3460;
+  border: 2px solid #e94560;
+}
+
+/* mode-specific colors */
+body.shortBreak .tab.active,
+body.shortBreak .btn-primary,
+body.shortBreak h1,
+body.shortBreak #count {
+  background: #4caf50;
+  color: #fff;
+}
+
+body.shortBreak h1,
+body.shortBreak #count {
+  background: transparent;
+  color: #4caf50;
+}
+
+body.longBreak .tab.active,
+body.longBreak .btn-primary,
+body.longBreak h1,
+body.longBreak #count {
+  background: #2196f3;
+  color: #fff;
+}
+
+body.longBreak h1,
+body.longBreak #count {
+  background: transparent;
+  color: #2196f3;
+}
