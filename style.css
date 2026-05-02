@@ -109,6 +109,34 @@ h1 {
   color: #eee;
 }
 
+.music-control {
+  margin-top: 16px;
+}
+
+.btn-music {
+  padding: 8px 24px;
+  border: 2px solid #0f3460;
+  border-radius: 20px;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.btn-music:hover {
+  border-color: #e94560;
+  color: #ccc;
+}
+
+.btn-music.active {
+  border-color: #e94560;
+  color: #e94560;
+}
+
+body.shortBreak .btn-music.active { border-color: #4caf50; color: #4caf50; }
+body.longBreak  .btn-music.active { border-color: #2196f3; color: #2196f3; }
+
 .pomodoro-count {
   margin-top: 36px;
   color: #888;
