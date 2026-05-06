@@ -272,3 +272,8 @@ function renderDots() {
 // Initialize
 renderTime();
 renderDots();
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
