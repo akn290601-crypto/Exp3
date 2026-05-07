@@ -137,6 +137,39 @@ h1 {
 body.shortBreak .btn-music.active { border-color: #4caf50; color: #4caf50; }
 body.longBreak  .btn-music.active { border-color: #2196f3; color: #2196f3; }
 
+.genre-selector {
+  display: none;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.genre-selector.visible {
+  display: flex;
+}
+
+.btn-genre {
+  padding: 6px 18px;
+  border: 2px solid #0f3460;
+  border-radius: 20px;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.btn-genre:hover {
+  border-color: #e94560;
+  color: #ccc;
+}
+
+.btn-genre.active {
+  background: #e94560;
+  border-color: #e94560;
+  color: #fff;
+}
+
 .pomodoro-count {
   margin-top: 36px;
   color: #888;
