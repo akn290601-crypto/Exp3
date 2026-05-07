@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f0ebe4;
-  color: #2d2a27;
+  background: #141414;
+  color: #d4d0cb;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -25,7 +25,7 @@ h1 {
   font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #aaa;
+  color: #444;
   margin-bottom: 44px;
 }
 
@@ -33,7 +33,7 @@ h1 {
 .mode-tabs {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #ddd6ce;
+  border-bottom: 1px solid #2a2a2a;
   margin-bottom: 48px;
 }
 
@@ -43,7 +43,7 @@ h1 {
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   background: transparent;
-  color: #ccc;
+  color: #3a3a3a;
   cursor: pointer;
   font-family: inherit;
   font-size: 0.78rem;
@@ -52,11 +52,11 @@ h1 {
   transition: all 0.2s;
 }
 
-.tab:hover { color: #888; }
+.tab:hover { color: #666; }
 
 .tab.active {
-  color: #1a1a1a;
-  border-bottom-color: #1a1a1a;
+  color: #d4d0cb;
+  border-bottom-color: #d4d0cb;
 }
 
 /* timer */
@@ -68,6 +68,7 @@ h1 {
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  color: #e8e4de;
 }
 
 /* controls */
@@ -79,10 +80,10 @@ h1 {
 
 .btn-primary {
   padding: 13px 44px;
-  border: 1.5px solid #2d2a27;
+  border: 1.5px solid #d4d0cb;
   border-radius: 2px;
-  background: #2d2a27;
-  color: #f0ebe4;
+  background: transparent;
+  color: #d4d0cb;
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 500;
@@ -92,15 +93,15 @@ h1 {
   transition: all 0.2s;
 }
 
-.btn-primary:hover { background: #444038; border-color: #444038; }
+.btn-primary:hover { background: #d4d0cb; color: #141414; }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
   padding: 13px 20px;
-  border: 1.5px solid #ccc5bc;
+  border: 1.5px solid #2a2a2a;
   border-radius: 2px;
   background: transparent;
-  color: #bbb;
+  color: #3a3a3a;
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 500;
@@ -110,7 +111,7 @@ h1 {
   transition: all 0.2s;
 }
 
-.btn-secondary:hover { border-color: #aaa; color: #888; }
+.btn-secondary:hover { border-color: #555; color: #666; }
 .btn-secondary:active { transform: scale(0.98); }
 
 /* music */
@@ -120,7 +121,7 @@ h1 {
   padding: 0;
   border: none;
   background: transparent;
-  color: #ccc;
+  color: #3a3a3a;
   font-family: inherit;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
@@ -128,8 +129,8 @@ h1 {
   transition: color 0.2s;
 }
 
-.btn-music:hover { color: #888; }
-.btn-music.active { color: #1a1a1a; }
+.btn-music:hover { color: #666; }
+.btn-music.active { color: #d4d0cb; }
 
 .genre-selector {
   display: none;
@@ -145,7 +146,7 @@ h1 {
   border: none;
   border-bottom: 1.5px solid transparent;
   background: transparent;
-  color: #ccc;
+  color: #3a3a3a;
   font-family: inherit;
   font-size: 0.72rem;
   font-weight: 500;
@@ -155,17 +156,17 @@ h1 {
   transition: all 0.2s;
 }
 
-.btn-genre:hover { color: #888; }
+.btn-genre:hover { color: #666; }
 
 .btn-genre.active {
-  color: #1a1a1a;
-  border-bottom-color: #1a1a1a;
+  color: #d4d0cb;
+  border-bottom-color: #d4d0cb;
 }
 
 /* pomodoro count */
 .pomodoro-count {
   margin-top: 52px;
-  color: #ccc;
+  color: #333;
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -173,7 +174,7 @@ h1 {
 
 #count {
   font-weight: 600;
-  color: #1a1a1a;
+  color: #d4d0cb;
 }
 
 #dots {
@@ -187,16 +188,18 @@ h1 {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: #d4d0cb;
 }
 
-.dot.empty { background: #d9d1c8; }
+.dot.empty { background: #2a2a2a; }
 
 /* break mode accents */
 body.shortBreak .tab.active { color: #5a9a6a; border-bottom-color: #5a9a6a; }
-body.shortBreak .btn-primary { background: #5a9a6a; border-color: #5a9a6a; }
+body.shortBreak .btn-primary { border-color: #5a9a6a; color: #5a9a6a; }
+body.shortBreak .btn-primary:hover { background: #5a9a6a; color: #141414; }
 body.shortBreak .dot { background: #5a9a6a; }
 
 body.longBreak .tab.active { color: #4a7abf; border-bottom-color: #4a7abf; }
-body.longBreak .btn-primary { background: #4a7abf; border-color: #4a7abf; }
+body.longBreak .btn-primary { border-color: #4a7abf; color: #4a7abf; }
+body.longBreak .btn-primary:hover { background: #4a7abf; color: #141414; }
 body.longBreak .dot { background: #4a7abf; }
