@@ -216,7 +216,7 @@ h1 {
   h1          { grid-area: title;    align-self: end; margin-bottom: 10px; }
   .mode-tabs  { grid-area: tabs;     justify-content: flex-end; margin-bottom: 16px; border-bottom-color: #2a2a2a; }
   .timer-display { grid-area: timer; display: flex; align-items: center; justify-content: center; margin: 0; }
-  #time       { font-size: 4.8rem; }
+  #time       { font-size: clamp(6rem, 30vh, 10rem); }
   .controls   { grid-area: controls; margin-top: 0; justify-content: flex-start; }
   .music-control { grid-area: music; margin-top: 18px; }
   .genre-selector { justify-content: flex-start; }
