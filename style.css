@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #fafafa;
-  color: #1a1a1a;
+  background: #f0ebe4;
+  color: #2d2a27;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -33,7 +33,7 @@ h1 {
 .mode-tabs {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd6ce;
   margin-bottom: 48px;
 }
 
@@ -79,10 +79,10 @@ h1 {
 
 .btn-primary {
   padding: 13px 44px;
-  border: 1.5px solid #1a1a1a;
+  border: 1.5px solid #2d2a27;
   border-radius: 2px;
-  background: #1a1a1a;
-  color: #fafafa;
+  background: #2d2a27;
+  color: #f0ebe4;
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 500;
@@ -92,12 +92,12 @@ h1 {
   transition: all 0.2s;
 }
 
-.btn-primary:hover { background: #333; border-color: #333; }
+.btn-primary:hover { background: #444038; border-color: #444038; }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
   padding: 13px 20px;
-  border: 1.5px solid #e0e0e0;
+  border: 1.5px solid #ccc5bc;
   border-radius: 2px;
   background: transparent;
   color: #bbb;
@@ -190,7 +190,7 @@ h1 {
   background: #1a1a1a;
 }
 
-.dot.empty { background: #e8e8e8; }
+.dot.empty { background: #d9d1c8; }
 
 /* break mode accents */
 body.shortBreak .tab.active { color: #5a9a6a; border-bottom-color: #5a9a6a; }
