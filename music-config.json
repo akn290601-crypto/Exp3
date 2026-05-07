@@ -1,0 +1,10 @@
+{
+  "jazz": {
+    "work":  ["music/jazz/work-1.mp3"],
+    "break": ["music/jazz/break-1.mp3"]
+  },
+  "healing": {
+    "work":  ["music/healing/work-1.mp3"],
+    "break": ["music/healing/break-1.mp3"]
+  }
+}

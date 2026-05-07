@@ -6,10 +6,16 @@ const MODES = {
 
 const POMODOROS_BEFORE_LONG_BREAK = 4;
 
-const MUSIC_FILES = {
-  jazz:    { work: 'jazz-work.mp3',    break: 'jazz-break.mp3' },
-  healing: { work: 'healing-work.mp3', break: 'healing-break.mp3' },
-};
+let musicConfig = null;
+
+fetch('./music-config.json')
+  .then(r => r.json())
+  .then(data => { musicConfig = data; })
+  .catch(() => {});
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 let currentMode = 'work';
 let secondsLeft = MODES.work.seconds;
@@ -29,18 +35,20 @@ const musicBtn       = document.getElementById('musicBtn');
 const genreSelector  = document.getElementById('genreSelector');
 
 // ── Music ──────────────────────────────────────────────────────────────────
-function getMusicFile(genre, mode) {
-  return MUSIC_FILES[genre][mode === 'work' ? 'work' : 'break'];
-}
-
 function startMusic(mode) {
   stopMusic();
-  if (!musicEnabled) return;
-  const file = getMusicFile(selectedGenre, mode);
-  currentAudio = new Audio(file);
-  currentAudio.loop = true;
-  currentAudio.volume = 0.5;
-  currentAudio.play().catch(() => {});
+  if (!musicEnabled || !musicConfig) return;
+  const type = mode === 'work' ? 'work' : 'break';
+  const files = musicConfig[selectedGenre]?.[type];
+  if (!files || files.length === 0) return;
+
+  function playNext() {
+    currentAudio = new Audio(pickRandom(files));
+    currentAudio.volume = 0.5;
+    currentAudio.addEventListener('ended', playNext);
+    currentAudio.play().catch(() => {});
+  }
+  playNext();
 }
 
 function stopMusic() {
