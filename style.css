@@ -181,11 +181,6 @@ body {
   text-align: center;
 }
 
-.font-icon {
-  font-style: italic;
-  font-weight: 700;
-}
-
 .select-control {
   background: transparent;
   border: none;
