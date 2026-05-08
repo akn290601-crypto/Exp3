@@ -4,7 +4,7 @@
     "break": ["music/jazz/break-1.mp3"]
   },
   "healing": {
-    "work":  ["music/healing/work-1.mp3"],
-    "break": ["music/healing/break-1.mp3"]
+    "work":  ["f1.mp3", "f3.mp3", "f4.mp3", "F2.mp3", "F5.mp3", "F6.mp3"],
+    "break": ["f1.mp3", "f3.mp3", "f4.mp3", "F2.mp3", "F5.mp3", "F6.mp3"]
   }
 }
