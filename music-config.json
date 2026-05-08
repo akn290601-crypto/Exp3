@@ -1,7 +1,27 @@
 {
   "jazz": {
-    "work":  ["music/jazz/work-1.mp3"],
-    "break": ["music/jazz/break-1.mp3"]
+    "work":  [
+      "music/jazz/J1.mp3",
+      "music/jazz/J2.mp3",
+      "music/jazz/J3.mp3",
+      "music/jazz/J4.mp3",
+      "music/jazz/J5.mp3",
+      "music/jazz/J6.mp3",
+      "music/jazz/J7.mp3",
+      "music/jazz/J8.mp3",
+      "music/jazz/J9.mp3"
+    ],
+    "break": [
+      "music/jazz/J1.mp3",
+      "music/jazz/J2.mp3",
+      "music/jazz/J3.mp3",
+      "music/jazz/J4.mp3",
+      "music/jazz/J5.mp3",
+      "music/jazz/J6.mp3",
+      "music/jazz/J7.mp3",
+      "music/jazz/J8.mp3",
+      "music/jazz/J9.mp3"
+    ]
   },
   "future": {
     "work":  [
