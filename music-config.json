@@ -37,5 +37,9 @@
   "healing": {
     "work":  [],
     "break": []
+  },
+  "britpop": {
+    "work":  [],
+    "break": []
   }
 }
