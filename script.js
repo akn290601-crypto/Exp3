@@ -59,43 +59,84 @@ function resizeCanvas() {
   canvas.width  = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
 }
-
 window.addEventListener('resize', resizeCanvas);
+
+function getModeColor() {
+  if (currentMode === 'shortBreak') return '90,154,106';
+  if (currentMode === 'longBreak')  return '74,122,191';
+  return '212,208,203';
+}
+
+function drawWaveLayer(points, color, fillAlpha, strokeAlpha, yShift) {
+  const W = canvas.width, H = canvas.height;
+  canvasCtx.beginPath();
+  canvasCtx.moveTo(0, H);
+  let px = 0, py = H;
+  points.forEach((y, i) => {
+    const x = (i / (points.length - 1)) * W;
+    const cy = H - y * H * 0.9 + yShift;
+    if (i === 0) { canvasCtx.lineTo(x, cy); }
+    else { const mx = (px + x) / 2; canvasCtx.quadraticCurveTo(px, py, mx, (py + cy) / 2); }
+    px = x; py = cy;
+  });
+  canvasCtx.lineTo(W, H);
+  canvasCtx.closePath();
+  const grad = canvasCtx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, `rgba(${color},${fillAlpha})`);
+  grad.addColorStop(1, `rgba(${color},0.01)`);
+  canvasCtx.fillStyle = grad;
+  canvasCtx.fill();
+
+  canvasCtx.beginPath();
+  px = 0; py = H;
+  points.forEach((y, i) => {
+    const x = (i / (points.length - 1)) * W;
+    const cy = H - y * H * 0.9 + yShift;
+    if (i === 0) { canvasCtx.moveTo(x, cy); }
+    else { const mx = (px + x) / 2; canvasCtx.quadraticCurveTo(px, py, mx, (py + cy) / 2); }
+    px = x; py = cy;
+  });
+  canvasCtx.strokeStyle = `rgba(${color},${strokeAlpha})`;
+  canvasCtx.lineWidth = 1.5;
+  canvasCtx.stroke();
+}
+
+function sampleFreq(freqData, pts) {
+  const binSize = Math.floor(freqData.length / pts);
+  return Array.from({ length: pts }, (_, i) => {
+    let s = 0;
+    for (let j = 0; j < binSize; j++) s += freqData[i * binSize + j];
+    return s / binSize / 255;
+  });
+}
 
 function drawFrame() {
   animFrameId = requestAnimationFrame(drawFrame);
-  const W = canvas.width;
+  canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
   const H = canvas.height;
-  canvasCtx.clearRect(0, 0, W, H);
-
+  const color = getModeColor();
   const isPlaying = musicEnabled && isRunning && analyser && currentAudio && !currentAudio.paused;
 
   if (isPlaying) {
-    const data = new Float32Array(analyser.fftSize);
-    analyser.getFloatTimeDomainData(data);
-
-    canvasCtx.beginPath();
-    canvasCtx.strokeStyle = '#d4d0cb';
-    canvasCtx.lineWidth = 1.5;
-    canvasCtx.lineJoin = 'round';
-
-    const step = W / data.length;
-    for (let i = 0; i < data.length; i++) {
-      const y = (data[i] * 0.5 + 0.5) * H;
-      i === 0 ? canvasCtx.moveTo(0, y) : canvasCtx.lineTo(i * step, y);
-    }
-    canvasCtx.stroke();
+    const freqData = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(freqData);
+    const pts = sampleFreq(freqData, 80);
+    drawWaveLayer(pts, color, 0.10, 0.20, H * 0.08);
+    drawWaveLayer(pts, color, 0.22, 0.50, H * 0.02);
   } else {
-    // 静止時：ゆるやかなサインウェーブ
-    idlePhase += 0.012;
-    canvasCtx.beginPath();
-    canvasCtx.strokeStyle = '#272727';
-    canvasCtx.lineWidth = 1;
-    for (let x = 0; x <= W; x += 2) {
-      const y = H / 2 + Math.sin(x * 0.018 + idlePhase) * 3;
-      x === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
-    }
-    canvasCtx.stroke();
+    idlePhase += 0.006;
+    const W = canvas.width;
+    [
+      { base: 0.38, amp: 0.10, spd: 0.010, fill: 0.06, stroke: 0.12 },
+      { base: 0.50, amp: 0.07, spd: 0.014, fill: 0.04, stroke: 0.08 },
+    ].forEach(({ base, amp, spd, fill, stroke }, li) => {
+      const pts = Array.from({ length: 80 }, (_, i) => {
+        const x = (i / 79) * W;
+        return base + Math.sin(x * spd + idlePhase + li * 1.5) * amp
+          + Math.sin(x * spd * 1.8 - idlePhase * 0.7) * amp * 0.4;
+      });
+      drawWaveLayer(pts, color, fill, stroke, 0);
+    });
   }
 }
 

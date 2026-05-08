@@ -15,10 +15,14 @@ body {
 }
 
 .app {
+  position: relative;
+  overflow: hidden;
   text-align: center;
   padding: 56px 48px;
   width: 380px;
 }
+
+.app > *:not(#visualizer) { position: relative; z-index: 1; }
 
 h1 {
   font-size: 1rem;
@@ -60,13 +64,16 @@ h1 {
 }
 
 /* timer */
-.timer-display { margin: 8px 0 16px; }
+.timer-display { margin: 8px 0 48px; }
 
 #visualizer {
-  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 48px;
-  margin: 0 0 28px;
+  height: 45%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 #time {
@@ -212,7 +219,6 @@ h1 {
     grid-template-areas:
       "title    tabs"
       "timer    controls"
-      "timer    visual"
       "timer    music"
       "timer    count";
     width: 100%;
@@ -256,7 +262,6 @@ h1 {
     letter-spacing: 0.08em;
   }
 
-  #visualizer { grid-area: visual; height: 32px; margin: 4px 0; }
   .music-control { grid-area: music; margin-top: 8px; }
   .btn-music { font-size: 0.88rem; }
   .select-genre { font-size: 0.88rem; }
