@@ -40,7 +40,6 @@ const canvasCtx     = canvas.getContext('2d');
 let audioCtx = null;
 let analyser = null;
 let animFrameId = null;
-let idlePhase = 0;
 
 function getAudioCtx() {
   if (!audioCtx) {
@@ -54,10 +53,10 @@ function getAudioCtx() {
   return audioCtx;
 }
 
-// ── Visualizer (棒人間) ────────────────────────────────────────────────────
+// ── Canvas (full-screen background) ───────────────────────────────────────
 function resizeCanvas() {
-  canvas.width  = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 
@@ -69,11 +68,10 @@ function getModeColor() {
 
 let dancePhase    = 0;
 let smoothEnergy  = 0;
-let currentVisual = 'figure';
-const floatingNotes = [];
+let currentVisual = 'aurora';
 
 // ── 星空 ────────────────────────────────────────────────────────────────────
-const stars = Array.from({ length: 75 }, () => ({
+const stars = Array.from({ length: 150 }, () => ({
   x: Math.random(), y: Math.random(),
   r: Math.random() * 1.3 + 0.3,
   baseAlpha: Math.random() * 0.55 + 0.25,
@@ -147,7 +145,7 @@ function drawAurora(energy, phase) {
     canvasCtx.lineTo(W, H); canvasCtx.closePath();
     const hue = (baseHue + b * 28 + phase * 6) % 360;
     const sat = 65 + energy * 25;
-    const fa = 0.13 + energy * 0.20 - b * 0.03;
+    const fa = 0.22 + energy * 0.30 - b * 0.04;
     const grad = canvasCtx.createLinearGradient(0, 0, 0, H);
     grad.addColorStop(0, `hsla(${hue},${sat}%,65%,${fa})`);
     grad.addColorStop(1, `hsla(${hue},${sat}%,65%,0.01)`);
@@ -168,102 +166,6 @@ function drawAurora(energy, phase) {
   });
 }
 
-function spawnNote(x, y) {
-  floatingNotes.push({
-    x, y,
-    vx: (Math.random() - 0.5) * 1.8,
-    vy: -(Math.random() * 1.5 + 0.6),
-    alpha: 0.85,
-    char: Math.random() > 0.5 ? '♪' : '♫',
-    size: 10 + Math.random() * 5,
-  });
-}
-
-function drawStickFigure(energy, phase, color) {
-  const W = canvas.width, H = canvas.height;
-  const s  = Math.min(W * 0.11, H * 0.35);
-  const cx = W / 2;
-  const cy = H * 0.44;
-
-  const bounce   = Math.abs(Math.sin(phase * 2)) * energy * s * 0.20;
-  const lean     = Math.sin(phase * 0.8) * energy * s * 0.08;
-  const armSwing = Math.sin(phase * 1.5) * (0.3 + energy * 1.4);
-  const legKick  = Math.sin(phase * 2.0) * (0.15 + energy * 0.80);
-
-  const alpha = 0.45 + energy * 0.45;
-  const lw    = Math.max(1.5, s * 0.09);
-
-  canvasCtx.save();
-  canvasCtx.strokeStyle = `rgba(${color},${alpha})`;
-  canvasCtx.lineWidth   = lw;
-  canvasCtx.lineCap     = 'round';
-  canvasCtx.lineJoin    = 'round';
-  canvasCtx.translate(cx + lean, cy);
-
-  const headR    = s * 0.23;
-  const neckY    = -s * 0.18 - bounce;
-  const hipY     = s * 0.52;
-  const headY    = neckY - headR * 1.2;
-  const shoulderY = neckY + (hipY - neckY) * 0.10;
-  const armLen   = s * 0.60;
-  const legLen   = s * 0.70;
-
-  // 頭
-  canvasCtx.beginPath();
-  canvasCtx.arc(0, headY, headR, 0, Math.PI * 2);
-  canvasCtx.stroke();
-
-  // 胴体
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, neckY);
-  canvasCtx.lineTo(0, hipY);
-  canvasCtx.stroke();
-
-  // 左腕
-  const la = Math.PI - Math.PI * 0.28 + armSwing;
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, shoulderY);
-  canvasCtx.lineTo(Math.cos(la) * armLen, shoulderY + Math.sin(la) * armLen);
-  canvasCtx.stroke();
-
-  // 右腕（逆位相）
-  const ra = Math.PI * 0.28 - armSwing;
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, shoulderY);
-  canvasCtx.lineTo(Math.cos(ra) * armLen, shoulderY + Math.sin(ra) * armLen);
-  canvasCtx.stroke();
-
-  // 左足
-  const ll = Math.PI * 0.5 + Math.PI * 0.22 + legKick;
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, hipY);
-  canvasCtx.lineTo(Math.cos(ll) * legLen, hipY + Math.sin(ll) * legLen);
-  canvasCtx.stroke();
-
-  // 右足（逆位相）
-  const rl = Math.PI * 0.5 - Math.PI * 0.22 - legKick;
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, hipY);
-  canvasCtx.lineTo(Math.cos(rl) * legLen, hipY + Math.sin(rl) * legLen);
-  canvasCtx.stroke();
-
-  canvasCtx.restore();
-}
-
-function drawNotes(color) {
-  for (let i = floatingNotes.length - 1; i >= 0; i--) {
-    const n = floatingNotes[i];
-    n.x += n.vx; n.y += n.vy; n.alpha *= 0.965;
-    if (n.alpha < 0.05) { floatingNotes.splice(i, 1); continue; }
-    canvasCtx.save();
-    canvasCtx.globalAlpha = n.alpha;
-    canvasCtx.fillStyle   = `rgba(${color},1)`;
-    canvasCtx.font        = `${n.size}px sans-serif`;
-    canvasCtx.fillText(n.char, n.x, n.y);
-    canvasCtx.restore();
-  }
-}
-
 function drawFrame() {
   animFrameId = requestAnimationFrame(drawFrame);
   canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -279,24 +181,14 @@ function drawFrame() {
     const total = freq.reduce((s, v) => s + v, 0) / (bins * 255);
     smoothEnergy = smoothEnergy * 0.75 + (bass * 0.65 + total * 0.35) * 0.25;
     dancePhase  += 0.06 + smoothEnergy * 0.20;
-
-    if (smoothEnergy > 0.12 && Math.random() < smoothEnergy * 0.10) {
-      spawnNote(canvas.width / 2 + (Math.random() - 0.5) * 55, canvas.height * 0.18);
-    }
   } else {
     smoothEnergy *= 0.93;
     dancePhase   += 0.018;
   }
 
-  if (currentVisual === 'figure') {
-      if (isPlaying && smoothEnergy > 0.12 && Math.random() < smoothEnergy * 0.10) {
-      spawnNote(canvas.width / 2 + (Math.random() - 0.5) * 55, canvas.height * 0.18);
-    }
-    drawStickFigure(smoothEnergy, dancePhase, color);
-    drawNotes(color);
-  } else if (currentVisual === 'stars') {
+  if (currentVisual === 'stars') {
     drawStarfield(smoothEnergy, color);
-  } else if (currentVisual === 'aurora') {
+  } else {
     drawAurora(smoothEnergy, dancePhase);
   }
 }
@@ -394,6 +286,7 @@ function startTimer() {
   isRunning = true;
   intervalId = setInterval(timerTick, 1000);
   startMusic(currentMode);
+  requestWakeLock();
 }
 
 function stopTimer() {
@@ -401,6 +294,7 @@ function stopTimer() {
   clearInterval(intervalId);
   intervalId = null;
   stopMusic();
+  releaseWakeLock();
 }
 
 function resetTimer() {
@@ -492,3 +386,23 @@ drawFrame();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js');
 }
+
+// ── Wake Lock (省電力モード防止) ───────────────────────────────────────────
+let wakeLock = null;
+
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+  } catch (e) {}
+}
+
+async function releaseWakeLock() {
+  if (!wakeLock) return;
+  try { await wakeLock.release(); } catch (e) {}
+  wakeLock = null;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (isRunning && document.visibilityState === 'visible') requestWakeLock();
+});
