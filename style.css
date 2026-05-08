@@ -36,7 +36,7 @@ h1 {
   font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #888;
+  color: #e8e4de;
   margin-bottom: 44px;
 }
 
@@ -44,7 +44,7 @@ h1 {
 .mode-tabs {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid #666;
   margin-bottom: 48px;
 }
 
@@ -54,7 +54,7 @@ h1 {
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   background: transparent;
-  color: #777;
+  color: #aaa;
   cursor: pointer;
   font-family: inherit;
   font-size: 1.05rem;
@@ -63,7 +63,7 @@ h1 {
   transition: all 0.2s;
 }
 
-.tab:hover { color: #aaa; }
+.tab:hover { color: #ccc; }
 
 .tab.active {
   color: #d4d0cb;
@@ -110,10 +110,10 @@ h1 {
 
 .btn-secondary {
   padding: 13px 20px;
-  border: 1.5px solid #444;
+  border: 1.5px solid #666;
   border-radius: 2px;
   background: transparent;
-  color: #777;
+  color: #aaa;
   white-space: nowrap;
   font-family: inherit;
   font-size: 1.05rem;
@@ -124,7 +124,7 @@ h1 {
   transition: all 0.2s;
 }
 
-.btn-secondary:hover { border-color: #777; color: #aaa; }
+.btn-secondary:hover { border-color: #999; color: #ccc; }
 .btn-secondary:active { transform: scale(0.98); }
 
 /* music */
@@ -134,7 +134,7 @@ h1 {
   padding: 0;
   border: none;
   background: transparent;
-  color: #777;
+  color: #aaa;
   font-family: inherit;
   font-size: 1rem;
   letter-spacing: 0.1em;
@@ -142,7 +142,7 @@ h1 {
   transition: color 0.2s;
 }
 
-.btn-music:hover { color: #aaa; }
+.btn-music:hover { color: #ccc; }
 .btn-music.active { color: #d4d0cb; }
 
 .genre-selector {
@@ -185,7 +185,7 @@ h1 {
   background: transparent;
   border: none;
   border-bottom: 1.5px solid #555;
-  color: #aaa;
+  color: #bbb;
   font-family: inherit;
   font-size: 0.88rem;
   font-weight: 500;
@@ -208,7 +208,7 @@ h1 {
 /* pomodoro count */
 .pomodoro-count {
   margin-top: 52px;
-  color: #777;
+  color: #aaa;
   font-size: 0.95rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -233,7 +233,7 @@ h1 {
   background: #d4d0cb;
 }
 
-.dot.empty { background: #444; }
+.dot.empty { background: #555; }
 
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
@@ -266,7 +266,7 @@ h1 {
     grid-area: tabs;
     justify-content: flex-end;
     margin-bottom: 12px;
-    border-bottom-color: #2a2a2a;
+    border-bottom-color: #666;
   }
 
   .tab { font-size: 0.9rem; padding: 8px 14px; }
