@@ -275,6 +275,59 @@ function drawAurora(energy, phase) {
   });
 }
 
+function drawAuroraUp(energy, phase) {
+  const W = canvas.width, H = canvas.height;
+  const baseHue = getModeHue();
+  [[0.75, 0.28, 1.0], [0.55, 0.22, 0.65], [0.38, 0.16, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
+    const bp = phase * phaseScale + b * 2.1;
+    const waveAmp = H * (amp + energy * 0.15);
+
+    const getY = (x) => {
+      const t = x / W;
+      return H * baseY
+        + Math.sin(t * Math.PI * 3.5 + bp) * waveAmp
+        + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
+    };
+
+    // fill from wave upward to top of canvas
+    canvasCtx.beginPath();
+    canvasCtx.moveTo(0, 0);
+    canvasCtx.lineTo(0, getY(0));
+    let px = 0, py = getY(0);
+    for (let x = 4; x <= W; x += 4) {
+      const y = getY(x);
+      canvasCtx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
+      px = x; py = y;
+    }
+    canvasCtx.lineTo(W, 0);
+    canvasCtx.closePath();
+
+    const hue = (baseHue + b * 28 + phase * 6) % 360;
+    const sat = 65 + energy * 25;
+    const fa  = 0.38 + energy * 0.25 - b * 0.06;
+    const waveTopY = H * baseY - waveAmp;
+    const grad = canvasCtx.createLinearGradient(0, waveTopY, 0, 0);
+    grad.addColorStop(0,   `hsla(${hue},${sat}%,68%,${fa})`);
+    grad.addColorStop(0.5, `hsla(${hue},${sat}%,60%,${fa * 0.4})`);
+    grad.addColorStop(1,   `hsla(${hue},${sat}%,55%,0.0)`);
+    canvasCtx.fillStyle = grad;
+    canvasCtx.fill();
+
+    // glowing wave edge line
+    canvasCtx.beginPath();
+    px = 0; py = getY(0);
+    canvasCtx.moveTo(0, py);
+    for (let x = 4; x <= W; x += 4) {
+      const y = getY(x);
+      canvasCtx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
+      px = x; py = y;
+    }
+    canvasCtx.strokeStyle = `hsla(${hue},${sat}%,85%,${fa * 1.5})`;
+    canvasCtx.lineWidth = 1.5;
+    canvasCtx.stroke();
+  });
+}
+
 function drawFrame() {
   animFrameId = requestAnimationFrame(drawFrame);
   canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -301,8 +354,9 @@ function drawFrame() {
   else if (currentVisual === 'deep')    drawDeepSea(smoothEnergy, dancePhase);
   else if (currentVisual === 'network') drawNetwork(smoothEnergy, color);
   else if (currentVisual === 'grid')    drawGrid(smoothEnergy, dancePhase);
-  else if (currentVisual === 'luxury')  drawLuxury(smoothEnergy, dancePhase);
-  else                                  drawAurora(smoothEnergy, dancePhase * 0.25);
+  else if (currentVisual === 'luxury')   drawLuxury(smoothEnergy, dancePhase);
+  else if (currentVisual === 'aurora-up') drawAuroraUp(smoothEnergy, dancePhase * 0.25);
+  else                                    drawAurora(smoothEnergy, dancePhase * 0.25);
 }
 
 // ── ネットワーク ──────────────────────────────────────────────────────────────

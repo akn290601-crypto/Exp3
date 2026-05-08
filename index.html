@@ -17,7 +17,6 @@
   <canvas id="visualizer"></canvas>
 
   <div class="app">
-    <h1>ポモドーロタイマー</h1>
 
     <div class="mode-tabs">
       <button class="tab active" data-mode="work">作業</button>
@@ -38,27 +37,30 @@
     </div>
 
     <div class="settings-row">
-      <div class="setting-item">
-        <span class="setting-icon">♪</span>
-        <select id="genreSelect" class="select-control">
-          <option value="none">なし</option>
-          <option value="jazz">ジャズ</option>
-          <option value="future">フューチャー</option>
-          <option value="healing">ヒーリング</option>
-        </select>
-      </div>
-      <div class="setting-item">
-        <span class="setting-icon" style="font-style:italic;font-weight:600">A</span>
-        <select id="fontSelect" class="select-control">
-          <option value="inter">Inter</option>
-          <option value="orbitron">Orbitron</option>
-          <option value="spacemono">Space Mono</option>
-        </select>
+      <div class="settings-top">
+        <div class="setting-item">
+          <span class="setting-icon">♪</span>
+          <select id="genreSelect" class="select-control">
+            <option value="none">なし</option>
+            <option value="jazz">ジャズ</option>
+            <option value="future">フューチャー</option>
+            <option value="healing">ヒーリング</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <span class="setting-icon font-icon">A</span>
+          <select id="fontSelect" class="select-control">
+            <option value="inter">Inter</option>
+            <option value="orbitron">Orbitron</option>
+            <option value="spacemono">Space Mono</option>
+          </select>
+        </div>
       </div>
       <div class="setting-item">
         <span class="setting-icon">◈</span>
         <select id="visualSelect" class="select-control">
-          <option value="aurora">オーロラ</option>
+          <option value="aurora">オーロラ↓</option>
+          <option value="aurora-up">オーロラ↑</option>
           <option value="stars">星空</option>
           <option value="ripple">波紋</option>
           <option value="smoke">流煙</option>
@@ -69,6 +71,9 @@
         </select>
       </div>
     </div>
+
+    <p class="app-title">Pomodoro Timer</p>
+
   </div>
 
   <script src="script.js"></script>

@@ -27,29 +27,24 @@ body {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 56px 48px 40px;
+  padding: 40px 48px 32px;
   width: 380px;
-}
-
-h1 {
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: #e8e4de;
-  margin-bottom: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* mode tabs */
 .mode-tabs {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #666;
-  margin-bottom: 48px;
+  border-bottom: 1px solid #555;
+  margin-bottom: 36px;
+  width: 100%;
 }
 
 .tab {
-  padding: 10px 20px;
+  padding: 8px 24px;
   border: none;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -57,22 +52,22 @@ h1 {
   color: #aaa;
   cursor: pointer;
   font-family: inherit;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   transition: all 0.2s;
 }
 
 .tab:hover { color: #ccc; }
 
 .tab.active {
-  color: #d4d0cb;
-  border-bottom-color: #d4d0cb;
+  color: #e8e4de;
+  border-bottom-color: #e8e4de;
 }
 
 /* timer */
 .timer-display {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
 }
 
 #time {
@@ -84,29 +79,30 @@ h1 {
   color: #e8e4de;
 }
 
+/* count */
 .count-row {
-  margin: 16px 0 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  margin: 14px 0 32px;
   color: #555;
-  font-size: 0.7rem;
-  letter-spacing: 0.35em;
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
 .count-row::before,
 .count-row::after {
   content: '';
-  width: 32px;
+  width: 28px;
   height: 1px;
   background: #444;
 }
 
 #count {
-  color: #aaa;
-  font-size: 0.78rem;
+  color: #999;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.1em;
 }
@@ -139,7 +135,7 @@ h1 {
 
 .btn-secondary {
   padding: 13px 20px;
-  border: 1.5px solid #666;
+  border: 1.5px solid #555;
   border-radius: 2px;
   background: transparent;
   color: #aaa;
@@ -156,39 +152,51 @@ h1 {
 .btn-secondary:hover { border-color: #999; color: #ccc; }
 .btn-secondary:active { transform: scale(0.98); }
 
-/* settings row */
+/* settings */
 .settings-row {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  margin-top: 36px;
+  gap: 12px;
+  margin-top: 32px;
+  width: 100%;
+}
+
+.settings-top {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
 }
 
 .setting-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .setting-icon {
-  color: #777;
-  font-size: 1rem;
-  width: 1.2em;
+  color: #666;
+  font-size: 0.95rem;
+  width: 1.1em;
   text-align: center;
+}
+
+.font-icon {
+  font-style: italic;
+  font-weight: 700;
 }
 
 .select-control {
   background: transparent;
   border: none;
-  border-bottom: 1.5px solid #666;
+  border-bottom: 1.5px solid #555;
   color: #ccc;
   font-family: inherit;
   font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  padding: 6px 26px 6px 0;
+  padding: 4px 24px 4px 0;
   appearance: none;
   -webkit-appearance: none;
   outline: none;
@@ -202,54 +210,66 @@ h1 {
   color: #d4d0cb;
 }
 
+/* footer title */
+.app-title {
+  margin-top: 36px;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #3a3a3a;
+}
+
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
-  body { align-items: center; padding-bottom: 40px; }
+  body { align-items: center; }
 
   .app {
     display: grid;
     grid-template-columns: 1.1fr 1fr;
     grid-template-areas:
-      "title    tabs"
-      "timer    controls"
-      "timer    settings";
+      "tabs      controls"
+      "timer     settings"
+      "count     settings"
+      "footer    settings";
     width: 100%;
-    max-width: 860px;
+    max-width: 820px;
     padding: 12px 44px;
     column-gap: 44px;
     row-gap: 0;
     text-align: left;
-  }
-
-  h1 {
-    grid-area: title;
-    align-self: end;
-    margin-bottom: 8px;
-    font-size: 0.8rem;
+    align-items: start;
   }
 
   .mode-tabs {
     grid-area: tabs;
-    justify-content: flex-end;
-    margin-bottom: 12px;
-    border-bottom-color: #666;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+    border-bottom-color: #555;
   }
 
-  .tab { font-size: 0.9rem; padding: 8px 14px; }
+  .tab { font-size: 0.9rem; padding: 6px 14px; }
 
-  .timer-display { grid-area: timer; display: flex; align-items: center; justify-content: center; margin: 0; }
-  #time { font-size: clamp(6rem, 30vh, 10rem); }
+  .timer-display {
+    grid-area: timer;
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+  #time { font-size: clamp(5rem, 28vh, 9rem); }
+
+  .count-row { grid-area: count; justify-content: flex-start; margin: 4px 0; }
+  .count-row::before { display: none; }
 
   .controls {
     grid-area: controls;
-    margin-top: 0;
     justify-content: flex-start;
     gap: 8px;
+    align-self: center;
   }
 
   .btn-primary, .btn-secondary {
-    white-space: nowrap;
-    padding: 10px 22px;
+    padding: 10px 20px;
     font-size: 0.88rem;
     letter-spacing: 0.08em;
   }
@@ -257,11 +277,15 @@ h1 {
   .settings-row {
     grid-area: settings;
     align-items: flex-start;
-    margin-top: 10px;
-    gap: 8px;
+    margin-top: 0;
+    align-self: center;
+    gap: 10px;
   }
 
-  .select-control { font-size: 0.85rem; }
+  .settings-top { gap: 20px; }
+  .select-control { font-size: 0.88rem; }
+
+  .app-title { grid-area: footer; margin-top: 4px; }
 }
 
 /* break mode accents */
