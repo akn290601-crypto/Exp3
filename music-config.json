@@ -5,12 +5,12 @@
   },
   "future": {
     "work":  [
-      "music/healing/f1.mp3",
-      "music/healing/f3.mp3",
-      "music/healing/f4.mp3",
-      "music/healing/F2.mp3",
-      "music/healing/F5.mp3",
-      "music/healing/F6.mp3"
+      "music/future/f1.mp3",
+      "music/future/f3.mp3",
+      "music/future/f4.mp3",
+      "music/future/F2.mp3",
+      "music/future/F5.mp3",
+      "music/future/F6.mp3"
     ],
     "break": []
   },
