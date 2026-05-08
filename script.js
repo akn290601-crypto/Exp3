@@ -564,6 +564,17 @@ document.getElementById('visualSelect')?.addEventListener('change', e => {
   currentVisual = e.target.value;
 });
 
+const fontMap = {
+  inter:     { family: "'Inter', sans-serif",       weight: '300' },
+  orbitron:  { family: "'Orbitron', sans-serif",    weight: '400' },
+  spacemono: { family: "'Space Mono', monospace",   weight: '400' },
+};
+document.getElementById('fontSelect')?.addEventListener('change', e => {
+  const f = fontMap[e.target.value];
+  timeEl.style.fontFamily = f.family;
+  timeEl.style.fontWeight = f.weight;
+});
+
 function switchMode(mode) {
   if (isRunning) stopTimer();
   currentMode = mode;
