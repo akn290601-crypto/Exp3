@@ -386,7 +386,7 @@ function drawGrid(energy, phase) {
   const W = canvas.width, H = canvas.height;
   const hue = getModeHue();
   const vx = W / 2, vy = H * 0.42;
-  const base = 0.22 + energy * 0.12;
+  const base = 0.45 + energy * 0.2;
 
   // 収束線
   for (let i = 0; i < 18; i++) {
@@ -396,8 +396,8 @@ function drawGrid(energy, phase) {
     canvasCtx.beginPath();
     canvasCtx.moveTo(vx, vy);
     canvasCtx.lineTo(ex, ey);
-    canvasCtx.strokeStyle = `hsla(${hue},75%,65%,${base})`;
-    canvasCtx.lineWidth = 0.5;
+    canvasCtx.strokeStyle = `hsla(${hue},85%,80%,${base})`;
+    canvasCtx.lineWidth = 0.6;
     canvasCtx.stroke();
   }
 
@@ -407,17 +407,17 @@ function drawGrid(energy, phase) {
     const t = ((i / 9) + offset) % 1;
     const rx = t * W * 0.92;
     const ry = t * H * 0.52;
-    const al = (1 - t) * (0.45 + energy * 0.2);
+    const al = (1 - t) * (0.85 + energy * 0.15);
     canvasCtx.beginPath();
     canvasCtx.ellipse(vx, vy, rx, ry, 0, 0, Math.PI * 2);
-    canvasCtx.strokeStyle = `hsla(${hue},80%,70%,${al})`;
-    canvasCtx.lineWidth = 0.6 + t * 0.8;
+    canvasCtx.strokeStyle = `hsla(${hue},90%,82%,${al})`;
+    canvasCtx.lineWidth = 0.8 + t * 1.2;
     canvasCtx.stroke();
   }
 
   // 音楽連動フラッシュリング
   if (energy > 0.12 && Math.random() < energy * 0.12) {
-    gridFlashes.push({ r: 0, al: 0.7 + energy * 0.3 });
+    gridFlashes.push({ r: 0, al: 1.0 });
   }
   for (let i = gridFlashes.length - 1; i >= 0; i--) {
     const f = gridFlashes[i];
@@ -426,8 +426,8 @@ function drawGrid(energy, phase) {
     if (f.al < 0.02) { gridFlashes.splice(i, 1); continue; }
     canvasCtx.beginPath();
     canvasCtx.ellipse(vx, vy, f.r, f.r * 0.56, 0, 0, Math.PI * 2);
-    canvasCtx.strokeStyle = `hsla(${hue},90%,82%,${f.al})`;
-    canvasCtx.lineWidth = 1.5;
+    canvasCtx.strokeStyle = `hsla(${hue},95%,92%,${f.al})`;
+    canvasCtx.lineWidth = 2;
     canvasCtx.stroke();
   }
 }
