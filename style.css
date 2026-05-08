@@ -72,12 +72,7 @@ h1 {
 
 /* timer */
 .timer-display {
-  margin: 8px 0 48px;
-}
-
-.time-wrap {
-  position: relative;
-  display: inline-block;
+  margin: 8px 0 0;
 }
 
 #time {
@@ -89,14 +84,31 @@ h1 {
   color: #e8e4de;
 }
 
+.count-row {
+  margin: 16px 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #555;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+
+.count-row::before,
+.count-row::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: #444;
+}
+
 #count {
-  position: absolute;
-  bottom: 0.2em;
-  right: -1.6em;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #888;
-  letter-spacing: 0.05em;
+  color: #aaa;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 
 /* controls */
@@ -156,13 +168,13 @@ h1 {
   background: transparent;
   border: none;
   border-bottom: 1.5px solid #666;
-  color: #bbb;
+  color: #ccc;
   font-family: inherit;
-  font-size: 0.88rem;
+  font-size: 1.05rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   cursor: pointer;
-  padding: 4px 22px 4px 0;
+  padding: 6px 26px 6px 0;
   appearance: none;
   -webkit-appearance: none;
   outline: none;
