@@ -134,33 +134,33 @@ h1 {
 
 .genre-selector {
   display: none;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
-.genre-selector.visible { display: flex; }
+.genre-selector.visible { display: block; }
 
-.btn-genre {
-  padding: 4px 0;
-  border: none;
-  border-bottom: 1.5px solid transparent;
+.select-genre {
   background: transparent;
-  color: #3a3a3a;
+  border: none;
+  border-bottom: 1.5px solid #2a2a2a;
+  color: #d4d0cb;
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: all 0.2s;
+  padding: 4px 20px 4px 0;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
 }
 
-.btn-genre:hover { color: #666; }
-
-.btn-genre.active {
+.select-genre option {
+  background: #1e1e1e;
   color: #d4d0cb;
-  border-bottom-color: #d4d0cb;
 }
 
 /* pomodoro count */
@@ -195,7 +195,7 @@ h1 {
 
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
-  body { align-items: center; }
+  body { align-items: flex-start; padding-top: 8px; }
 
   .app {
     display: grid;
@@ -207,7 +207,7 @@ h1 {
       "timer    count";
     width: 100%;
     max-width: 820px;
-    padding: 20px 48px;
+    padding: 10px 48px;
     column-gap: 52px;
     row-gap: 0;
     text-align: left;

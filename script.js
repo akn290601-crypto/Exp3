@@ -85,8 +85,8 @@ startPauseBtn.addEventListener('click', toggleStartPause);
 resetBtn.addEventListener('click', resetTimer);
 musicBtn.addEventListener('click', toggleMusic);
 
-document.querySelectorAll('.btn-genre').forEach(btn => {
-  btn.addEventListener('click', () => selectGenre(btn.dataset.genre));
+document.getElementById('genreSelect').addEventListener('change', e => {
+  selectGenre(e.target.value);
 });
 
 function switchMode(mode) {
@@ -178,9 +178,6 @@ function toggleMusic() {
 
 function selectGenre(genre) {
   selectedGenre = genre;
-  document.querySelectorAll('.btn-genre').forEach(b => {
-    b.classList.toggle('active', b.dataset.genre === genre);
-  });
   if (musicEnabled && isRunning) {
     startMusic(currentMode);
   }
