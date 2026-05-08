@@ -309,7 +309,7 @@ function drawFrame() {
   else if (currentVisual === 'network') drawNetwork(smoothEnergy, color);
   else if (currentVisual === 'grid')    drawGrid(smoothEnergy, dancePhase);
   else if (currentVisual === 'luxury')  drawLuxury(smoothEnergy, dancePhase);
-  else                                  drawAurora(smoothEnergy, dancePhase);
+  else                                  drawAurora(smoothEnergy, dancePhase * 0.25);
 }
 
 // ── ネットワーク ──────────────────────────────────────────────────────────────
