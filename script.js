@@ -1,10 +1,7 @@
 const MODES = {
   work:       { label: '作業',   seconds: 25 * 60 },
   shortBreak: { label: '小休憩', seconds:  5 * 60 },
-  longBreak:  { label: '長休憩', seconds: 15 * 60 },
 };
-
-const POMODOROS_BEFORE_LONG_BREAK = 4;
 
 let musicConfig = null;
 
@@ -22,17 +19,13 @@ let secondsLeft = MODES.work.seconds;
 let isRunning = false;
 let intervalId = null;
 let completedPomodoros = 0;
-let musicEnabled = false;
-let selectedGenre = 'jazz';
+let selectedGenre = 'none';
 let currentAudio = null;
 
 const timeEl        = document.getElementById('time');
 const startPauseBtn = document.getElementById('startPauseBtn');
 const resetBtn      = document.getElementById('resetBtn');
 const countEl       = document.getElementById('count');
-const dotsEl        = document.getElementById('dots');
-const musicBtn      = document.getElementById('musicBtn');
-const genreSelector = document.getElementById('genreSelector');
 const canvas        = document.getElementById('visualizer');
 const canvasCtx     = canvas.getContext('2d');
 
@@ -287,7 +280,7 @@ function drawFrame() {
   canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
   const color     = getModeColor();
-  const isPlaying = musicEnabled && isRunning && analyser && currentAudio && !currentAudio.paused;
+  const isPlaying = isRunning && analyser && currentAudio && !currentAudio.paused;
 
   if (isPlaying) {
     const freq = new Uint8Array(analyser.frequencyBinCount);
@@ -509,7 +502,7 @@ function drawLuxury(energy, phase) {
 // ── Music ──────────────────────────────────────────────────────────────────
 function startMusic(mode) {
   stopMusic();
-  if (!musicEnabled || !musicConfig) return;
+  if (selectedGenre === 'none' || !musicConfig) return;
   const type = mode === 'work' ? 'work' : 'break';
   const files = musicConfig[selectedGenre]?.[type];
   if (!files || files.length === 0) return;
@@ -562,7 +555,6 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 startPauseBtn.addEventListener('click', toggleStartPause);
 resetBtn.addEventListener('click', resetTimer);
-musicBtn.addEventListener('click', toggleMusic);
 
 document.getElementById('genreSelect').addEventListener('change', e => {
   selectGenre(e.target.value);
@@ -629,43 +621,24 @@ function handleTimerEnd() {
   if (currentMode === 'work') {
     completedPomodoros++;
     countEl.textContent = completedPomodoros;
-    renderDots();
-
-    const nextMode = completedPomodoros % POMODOROS_BEFORE_LONG_BREAK === 0
-      ? 'longBreak'
-      : 'shortBreak';
-
     setTimeout(() => {
-      switchMode(nextMode);
+      switchMode('shortBreak');
       startTimer();
       startPauseBtn.textContent = 'ポーズ';
     }, 1000);
   } else {
     setTimeout(() => {
       switchMode('work');
+      startTimer();
+      startPauseBtn.textContent = 'ポーズ';
     }, 1000);
   }
 }
 
-// ── Music toggle & genre ───────────────────────────────────────────────────
-function toggleMusic() {
-  musicEnabled = !musicEnabled;
-  musicBtn.textContent = musicEnabled ? '♪ 音楽をオフ' : '♪ 音楽をオン';
-  musicBtn.classList.toggle('active', musicEnabled);
-  genreSelector.classList.toggle('visible', musicEnabled);
-
-  if (musicEnabled && isRunning) {
-    startMusic(currentMode);
-  } else {
-    stopMusic();
-  }
-}
-
+// ── Genre ──────────────────────────────────────────────────────────────────
 function selectGenre(genre) {
   selectedGenre = genre;
-  if (musicEnabled && isRunning) {
-    startMusic(currentMode);
-  }
+  if (isRunning) startMusic(currentMode);
 }
 
 // ── Render ─────────────────────────────────────────────────────────────────
@@ -676,19 +649,8 @@ function renderTime() {
   document.title = `${m}:${s} — ポモドーロタイマー`;
 }
 
-function renderDots() {
-  dotsEl.innerHTML = '';
-  const filled = completedPomodoros % POMODOROS_BEFORE_LONG_BREAK || POMODOROS_BEFORE_LONG_BREAK;
-  for (let i = 0; i < POMODOROS_BEFORE_LONG_BREAK; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i < filled && completedPomodoros > 0 ? '' : ' empty');
-    dotsEl.appendChild(dot);
-  }
-}
-
 // Initialize
 renderTime();
-renderDots();
 resizeCanvas();
 drawFrame();
 

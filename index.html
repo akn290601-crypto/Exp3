@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
-  <!-- iPhone PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ポモドーロ">
@@ -23,11 +22,13 @@
     <div class="mode-tabs">
       <button class="tab active" data-mode="work">作業</button>
       <button class="tab" data-mode="shortBreak">小休憩</button>
-      <button class="tab" data-mode="longBreak">長休憩</button>
     </div>
 
     <div class="timer-display">
-      <span id="time">25:00</span>
+      <div class="time-wrap">
+        <span id="time">25:00</span>
+        <span id="count">0</span>
+      </div>
     </div>
 
     <div class="controls">
@@ -35,24 +36,13 @@
       <button id="resetBtn" class="btn-secondary">リセット</button>
     </div>
 
-    <div class="music-control">
-      <button id="musicBtn" class="btn-music">♪ 音楽をオン</button>
-      <div class="genre-selector" id="genreSelector">
-        <select id="genreSelect" class="select-genre">
-          <option value="jazz">ジャズ</option>
-          <option value="healing">ヒーリング</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="pomodoro-count">
-      <span>完了したポモドーロ: </span>
-      <span id="count">0</span>
-      <div id="dots"></div>
-    </div>
-
-    <div class="visual-control">
-      <select id="visualSelect" class="select-visual">
+    <div class="settings-row">
+      <select id="genreSelect" class="select-control">
+        <option value="none">♪ なし</option>
+        <option value="jazz">ジャズ</option>
+        <option value="healing">ヒーリング</option>
+      </select>
+      <select id="visualSelect" class="select-control">
         <option value="aurora">オーロラ</option>
         <option value="stars">星空</option>
         <option value="ripple">波紋</option>

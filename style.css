@@ -71,7 +71,14 @@ h1 {
 }
 
 /* timer */
-.timer-display { margin: 8px 0 48px; }
+.timer-display {
+  margin: 8px 0 48px;
+}
+
+.time-wrap {
+  position: relative;
+  display: inline-block;
+}
 
 #time {
   font-size: 6.5rem;
@@ -80,6 +87,16 @@ h1 {
   font-variant-numeric: tabular-nums;
   line-height: 1;
   color: #e8e4de;
+}
+
+#count {
+  position: absolute;
+  bottom: 0.2em;
+  right: -1.6em;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #888;
+  letter-spacing: 0.05em;
 }
 
 /* controls */
@@ -127,69 +144,23 @@ h1 {
 .btn-secondary:hover { border-color: #999; color: #ccc; }
 .btn-secondary:active { transform: scale(0.98); }
 
-/* music */
-.music-control { margin-top: 36px; }
-
-.btn-music {
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: #aaa;
-  font-family: inherit;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: color 0.2s;
+/* settings row */
+.settings-row {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  margin-top: 36px;
 }
 
-.btn-music:hover { color: #ccc; }
-.btn-music.active { color: #d4d0cb; }
-
-.genre-selector {
-  display: none;
-  margin-top: 12px;
-}
-
-.genre-selector.visible { display: block; }
-
-.select-genre {
+.select-control {
   background: transparent;
   border: none;
-  border-bottom: 1.5px solid #555;
-  color: #d4d0cb;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  padding: 4px 20px 4px 0;
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 2px center;
-}
-
-.select-genre option {
-  background: #1e1e1e;
-  color: #d4d0cb;
-}
-
-/* visual selector */
-.visual-control {
-  margin-top: 20px;
-}
-
-.select-visual {
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid #555;
+  border-bottom: 1.5px solid #666;
   color: #bbb;
   font-family: inherit;
   font-size: 0.88rem;
   font-weight: 500;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.08em;
   cursor: pointer;
   padding: 4px 22px 4px 0;
   appearance: none;
@@ -200,40 +171,10 @@ h1 {
   background-position: right 2px center;
 }
 
-.select-visual option {
+.select-control option {
   background: #1e1e1e;
   color: #d4d0cb;
 }
-
-/* pomodoro count */
-.pomodoro-count {
-  margin-top: 52px;
-  color: #aaa;
-  font-size: 0.95rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-#count {
-  font-weight: 600;
-  color: #d4d0cb;
-}
-
-#dots {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #d4d0cb;
-}
-
-.dot.empty { background: #555; }
 
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
@@ -245,8 +186,7 @@ h1 {
     grid-template-areas:
       "title    tabs"
       "timer    controls"
-      "timer    music"
-      "timer    count";
+      "timer    settings";
     width: 100%;
     max-width: 860px;
     padding: 12px 44px;
@@ -288,21 +228,16 @@ h1 {
     letter-spacing: 0.08em;
   }
 
-  .music-control { grid-area: music; margin-top: 8px; }
-  .btn-music { font-size: 0.88rem; }
-  .select-genre { font-size: 0.88rem; }
+  .settings-row {
+    grid-area: settings;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
 
-  .pomodoro-count { grid-area: count; margin-top: 14px; font-size: 0.82rem; }
-  #dots { justify-content: flex-start; }
+  .select-control { font-size: 0.85rem; }
 }
 
 /* break mode accents */
 body.shortBreak .tab.active { color: #5a9a6a; border-bottom-color: #5a9a6a; }
 body.shortBreak .btn-primary { border-color: #5a9a6a; color: #5a9a6a; }
 body.shortBreak .btn-primary:hover { background: #5a9a6a; color: #141414; }
-body.shortBreak .dot { background: #5a9a6a; }
-
-body.longBreak .tab.active { color: #4a7abf; border-bottom-color: #4a7abf; }
-body.longBreak .btn-primary { border-color: #4a7abf; color: #4a7abf; }
-body.longBreak .btn-primary:hover { background: #4a7abf; color: #141414; }
-body.longBreak .dot { background: #4a7abf; }
