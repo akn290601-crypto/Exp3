@@ -195,7 +195,7 @@ h1 {
 
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
-  body { align-items: flex-start; padding-top: 8px; }
+  body { align-items: center; padding-bottom: 60px; }
 
   .app {
     display: grid;
