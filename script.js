@@ -26,13 +26,78 @@ let musicEnabled = false;
 let selectedGenre = 'jazz';
 let currentAudio = null;
 
-const timeEl         = document.getElementById('time');
-const startPauseBtn  = document.getElementById('startPauseBtn');
-const resetBtn       = document.getElementById('resetBtn');
-const countEl        = document.getElementById('count');
-const dotsEl         = document.getElementById('dots');
-const musicBtn       = document.getElementById('musicBtn');
-const genreSelector  = document.getElementById('genreSelector');
+const timeEl        = document.getElementById('time');
+const startPauseBtn = document.getElementById('startPauseBtn');
+const resetBtn      = document.getElementById('resetBtn');
+const countEl       = document.getElementById('count');
+const dotsEl        = document.getElementById('dots');
+const musicBtn      = document.getElementById('musicBtn');
+const genreSelector = document.getElementById('genreSelector');
+const canvas        = document.getElementById('visualizer');
+const canvasCtx     = canvas.getContext('2d');
+
+// ── Audio Context & Analyser ───────────────────────────────────────────────
+let audioCtx = null;
+let analyser = null;
+let animFrameId = null;
+let idlePhase = 0;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.85;
+    analyser.connect(audioCtx.destination);
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// ── Visualizer ─────────────────────────────────────────────────────────────
+function resizeCanvas() {
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+
+function drawFrame() {
+  animFrameId = requestAnimationFrame(drawFrame);
+  const W = canvas.width;
+  const H = canvas.height;
+  canvasCtx.clearRect(0, 0, W, H);
+
+  const isPlaying = musicEnabled && isRunning && analyser && currentAudio && !currentAudio.paused;
+
+  if (isPlaying) {
+    const data = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(data);
+
+    canvasCtx.beginPath();
+    canvasCtx.strokeStyle = '#d4d0cb';
+    canvasCtx.lineWidth = 1.5;
+    canvasCtx.lineJoin = 'round';
+
+    const step = W / data.length;
+    for (let i = 0; i < data.length; i++) {
+      const y = (data[i] * 0.5 + 0.5) * H;
+      i === 0 ? canvasCtx.moveTo(0, y) : canvasCtx.lineTo(i * step, y);
+    }
+    canvasCtx.stroke();
+  } else {
+    // 静止時：ゆるやかなサインウェーブ
+    idlePhase += 0.012;
+    canvasCtx.beginPath();
+    canvasCtx.strokeStyle = '#272727';
+    canvasCtx.lineWidth = 1;
+    for (let x = 0; x <= W; x += 2) {
+      const y = H / 2 + Math.sin(x * 0.018 + idlePhase) * 3;
+      x === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+    }
+    canvasCtx.stroke();
+  }
+}
 
 // ── Music ──────────────────────────────────────────────────────────────────
 function startMusic(mode) {
@@ -42,9 +107,16 @@ function startMusic(mode) {
   const files = musicConfig[selectedGenre]?.[type];
   if (!files || files.length === 0) return;
 
+  const ctx = getAudioCtx();
+
   function playNext() {
     currentAudio = new Audio(pickRandom(files));
+    currentAudio.crossOrigin = 'anonymous';
     currentAudio.volume = 0.5;
+    try {
+      const source = ctx.createMediaElementSource(currentAudio);
+      source.connect(analyser);
+    } catch (e) {}
     currentAudio.addEventListener('ended', playNext);
     currentAudio.play().catch(() => {});
   }
@@ -61,12 +133,12 @@ function stopMusic() {
 // ── Beep ───────────────────────────────────────────────────────────────────
 function playBeep() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getAudioCtx();
     [0, 0.3, 0.6].forEach(offset => {
       const osc  = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(analyser);
       osc.frequency.value = 880;
       gain.gain.setValueAtTime(0.3, ctx.currentTime + offset);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.25);
@@ -204,6 +276,8 @@ function renderDots() {
 // Initialize
 renderTime();
 renderDots();
+resizeCanvas();
+drawFrame();
 
 // PWA Service Worker
 if ('serviceWorker' in navigator) {

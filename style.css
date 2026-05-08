@@ -60,7 +60,14 @@ h1 {
 }
 
 /* timer */
-.timer-display { margin: 8px 0 48px; }
+.timer-display { margin: 8px 0 16px; }
+
+#visualizer {
+  display: block;
+  width: 100%;
+  height: 48px;
+  margin: 0 0 28px;
+}
 
 #time {
   font-size: 6.5rem;
@@ -205,6 +212,7 @@ h1 {
     grid-template-areas:
       "title    tabs"
       "timer    controls"
+      "timer    visual"
       "timer    music"
       "timer    count";
     width: 100%;
@@ -248,7 +256,8 @@ h1 {
     letter-spacing: 0.08em;
   }
 
-  .music-control { grid-area: music; margin-top: 14px; }
+  #visualizer { grid-area: visual; height: 32px; margin: 4px 0; }
+  .music-control { grid-area: music; margin-top: 8px; }
   .btn-music { font-size: 0.88rem; }
   .select-genre { font-size: 0.88rem; }
 
