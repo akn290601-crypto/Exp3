@@ -1,4 +1,4 @@
-const CACHE = 'pomodoro-v17';
+const CACHE = 'pomodoro-v18';
 const ASSETS = [
   './index.html',
   './style.css',

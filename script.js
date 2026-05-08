@@ -126,7 +126,7 @@ function getModeHue() {
 function drawAurora(energy, phase) {
   const W = canvas.width, H = canvas.height;
   const baseHue = getModeHue();
-  [[0.75, 0.28, 1.0], [0.55, 0.22, 0.65], [0.38, 0.16, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
+  [[0.25, 0.28, 1.0], [0.45, 0.22, 0.65], [0.62, 0.16, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
     const bp = phase * phaseScale + b * 2.1;
     const waveAmp = H * (amp + energy * 0.15);
 
@@ -137,9 +137,9 @@ function drawAurora(energy, phase) {
         + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
     };
 
-    // fill from wave upward to top of canvas
+    // fill from wave downward to bottom of canvas
     canvasCtx.beginPath();
-    canvasCtx.moveTo(0, 0);
+    canvasCtx.moveTo(0, H);
     canvasCtx.lineTo(0, getY(0));
     let px = 0, py = getY(0);
     for (let x = 4; x <= W; x += 4) {
@@ -147,14 +147,14 @@ function drawAurora(energy, phase) {
       canvasCtx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
       px = x; py = y;
     }
-    canvasCtx.lineTo(W, 0);
+    canvasCtx.lineTo(W, H);
     canvasCtx.closePath();
 
     const hue = (baseHue + b * 28 + phase * 6) % 360;
     const sat = 65 + energy * 25;
     const fa  = 0.38 + energy * 0.25 - b * 0.06;
-    const waveTopY = H * baseY - waveAmp;
-    const grad = canvasCtx.createLinearGradient(0, waveTopY, 0, 0);
+    const waveBotY = H * baseY + waveAmp;
+    const grad = canvasCtx.createLinearGradient(0, waveBotY, 0, H);
     grad.addColorStop(0,   `hsla(${hue},${sat}%,68%,${fa})`);
     grad.addColorStop(0.5, `hsla(${hue},${sat}%,60%,${fa * 0.4})`);
     grad.addColorStop(1,   `hsla(${hue},${sat}%,55%,0.0)`);
@@ -190,10 +190,10 @@ function drawFrame() {
     const bass  = freq.slice(0, bins >> 3).reduce((s, v) => s + v, 0) / ((bins >> 3) * 255);
     const total = freq.reduce((s, v) => s + v, 0) / (bins * 255);
     smoothEnergy = smoothEnergy * 0.75 + (bass * 0.65 + total * 0.35) * 0.25;
-    dancePhase  += 0.06 + smoothEnergy * 0.20;
+    dancePhase  += 0.018 + smoothEnergy * 0.06;
   } else {
     smoothEnergy *= 0.93;
-    dancePhase   += 0.018;
+    dancePhase   += 0.006;
   }
 
   if (currentVisual === 'stars') {
