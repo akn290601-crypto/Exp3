@@ -67,9 +67,106 @@ function getModeColor() {
   return '212,208,203';
 }
 
-let dancePhase   = 0;
-let smoothEnergy = 0;
+let dancePhase    = 0;
+let smoothEnergy  = 0;
+let currentVisual = 'figure';
 const floatingNotes = [];
+
+// ── 星空 ────────────────────────────────────────────────────────────────────
+const stars = Array.from({ length: 75 }, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random() * 1.3 + 0.3,
+  baseAlpha: Math.random() * 0.55 + 0.25,
+  tp: Math.random() * Math.PI * 2,
+  ts: Math.random() * 0.035 + 0.008,
+}));
+const shooters = [];
+
+function drawStarfield(energy, color) {
+  const W = canvas.width, H = canvas.height;
+  stars.forEach(s => {
+    s.tp += s.ts + energy * 0.04;
+    const tw = (Math.sin(s.tp) + 1) / 2;
+    const alpha = s.baseAlpha * (0.35 + tw * 0.65);
+    const r = s.r * (1 + energy * tw * 1.0);
+    canvasCtx.beginPath();
+    canvasCtx.arc(s.x * W, s.y * H, r, 0, Math.PI * 2);
+    canvasCtx.fillStyle = `rgba(${color},${alpha})`;
+    canvasCtx.fill();
+    if (tw > 0.85 && r > 1) {
+      canvasCtx.beginPath();
+      canvasCtx.arc(s.x * W, s.y * H, r * 4, 0, Math.PI * 2);
+      canvasCtx.fillStyle = `rgba(${color},${alpha * 0.08})`;
+      canvasCtx.fill();
+    }
+  });
+  if (energy > 0.18 && Math.random() < energy * 0.06) {
+    shooters.push({ x: Math.random() * W, y: Math.random() * H * 0.6,
+      vx: (Math.random() * 4 + 3) * (Math.random() > 0.5 ? 1 : -1),
+      vy: Math.random() * 2 + 1, alpha: 1, len: Math.random() * 35 + 15, color });
+  }
+  for (let i = shooters.length - 1; i >= 0; i--) {
+    const s = shooters[i];
+    canvasCtx.beginPath();
+    canvasCtx.moveTo(s.x, s.y);
+    canvasCtx.lineTo(s.x - s.vx * s.len / 8, s.y - s.vy * s.len / 8);
+    canvasCtx.strokeStyle = `rgba(${s.color},${s.alpha})`;
+    canvasCtx.lineWidth = 1.2;
+    canvasCtx.stroke();
+    s.x += s.vx; s.y += s.vy; s.alpha -= 0.055;
+    if (s.alpha < 0.05) shooters.splice(i, 1);
+  }
+}
+
+// ── オーロラ ─────────────────────────────────────────────────────────────────
+function getModeHue() {
+  if (currentMode === 'shortBreak') return 145;
+  if (currentMode === 'longBreak')  return 215;
+  return 270;
+}
+
+function drawAurora(energy, phase) {
+  const W = canvas.width, H = canvas.height;
+  const baseHue = getModeHue();
+  [[0.88, 0.40, 1.0], [0.68, 0.30, 0.65], [0.50, 0.22, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
+    const bp = phase * phaseScale + b * 2.1;
+    const waveAmp = H * (amp * 0.5 + energy * 0.35);
+    canvasCtx.beginPath();
+    canvasCtx.moveTo(0, H);
+    let px = 0, py = H;
+    for (let x = 0; x <= W; x += 4) {
+      const t = x / W;
+      const y = H * baseY
+        + Math.sin(t * Math.PI * 3.5 + bp) * waveAmp
+        + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
+      if (x === 0) { canvasCtx.lineTo(0, y); } else {
+        canvasCtx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
+      }
+      px = x; py = y;
+    }
+    canvasCtx.lineTo(W, H); canvasCtx.closePath();
+    const hue = (baseHue + b * 28 + phase * 6) % 360;
+    const sat = 65 + energy * 25;
+    const fa = 0.13 + energy * 0.20 - b * 0.03;
+    const grad = canvasCtx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, `hsla(${hue},${sat}%,65%,${fa})`);
+    grad.addColorStop(1, `hsla(${hue},${sat}%,65%,0.01)`);
+    canvasCtx.fillStyle = grad; canvasCtx.fill();
+    canvasCtx.beginPath(); px = 0; py = H;
+    for (let x = 0; x <= W; x += 4) {
+      const t = x / W;
+      const y = H * baseY
+        + Math.sin(t * Math.PI * 3.5 + bp) * waveAmp
+        + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
+      if (x === 0) { canvasCtx.moveTo(0, y); } else {
+        canvasCtx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2);
+      }
+      px = x; py = y;
+    }
+    canvasCtx.strokeStyle = `hsla(${hue},${sat}%,80%,${fa * 1.8})`;
+    canvasCtx.lineWidth = 1.2; canvasCtx.stroke();
+  });
+}
 
 function spawnNote(x, y) {
   floatingNotes.push({
@@ -191,8 +288,17 @@ function drawFrame() {
     dancePhase   += 0.018;
   }
 
-  drawStickFigure(smoothEnergy, dancePhase, color);
-  drawNotes(color);
+  if (currentVisual === 'figure') {
+      if (isPlaying && smoothEnergy > 0.12 && Math.random() < smoothEnergy * 0.10) {
+      spawnNote(canvas.width / 2 + (Math.random() - 0.5) * 55, canvas.height * 0.18);
+    }
+    drawStickFigure(smoothEnergy, dancePhase, color);
+    drawNotes(color);
+  } else if (currentVisual === 'stars') {
+    drawStarfield(smoothEnergy, color);
+  } else if (currentVisual === 'aurora') {
+    drawAurora(smoothEnergy, dancePhase);
+  }
 }
 
 // ── Music ──────────────────────────────────────────────────────────────────
@@ -255,6 +361,13 @@ musicBtn.addEventListener('click', toggleMusic);
 
 document.getElementById('genreSelect').addEventListener('change', e => {
   selectGenre(e.target.value);
+});
+
+document.querySelectorAll('.btn-visual').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentVisual = btn.dataset.visual;
+    document.querySelectorAll('.btn-visual').forEach(b => b.classList.toggle('active', b === btn));
+  });
 });
 
 function switchMode(mode) {
