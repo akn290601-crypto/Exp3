@@ -3,7 +3,7 @@
     "work":  ["music/jazz/work-1.mp3"],
     "break": ["music/jazz/break-1.mp3"]
   },
-  "healing": {
+  "future": {
     "work":  [
       "music/healing/f1.mp3",
       "music/healing/f3.mp3",
@@ -12,6 +12,10 @@
       "music/healing/F5.mp3",
       "music/healing/F6.mp3"
     ],
+    "break": []
+  },
+  "healing": {
+    "work":  [],
     "break": []
   }
 }
