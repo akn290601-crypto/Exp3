@@ -15,14 +15,10 @@ body {
 }
 
 .app {
-  position: relative;
-  overflow: hidden;
   text-align: center;
-  padding: 56px 48px;
+  padding: 56px 48px 40px;
   width: 380px;
 }
-
-.app > *:not(#visualizer) { position: relative; z-index: 1; }
 
 h1 {
   font-size: 1rem;
@@ -67,13 +63,10 @@ h1 {
 .timer-display { margin: 8px 0 48px; }
 
 #visualizer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 45%;
-  pointer-events: none;
-  z-index: 0;
+  height: 110px;
+  margin-top: 28px;
 }
 
 #time {
@@ -212,6 +205,7 @@ h1 {
 /* ── Landscape layout ─────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-height: 520px) {
   body { align-items: center; padding-bottom: 40px; }
+  #visualizer { display: none; }
 
   .app {
     display: grid;
