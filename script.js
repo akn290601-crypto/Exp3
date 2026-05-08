@@ -568,7 +568,7 @@ document.getElementById('genreSelect').addEventListener('change', e => {
   selectGenre(e.target.value);
 });
 
-document.getElementById('visualSelect').addEventListener('change', e => {
+document.getElementById('visualSelect')?.addEventListener('change', e => {
   currentVisual = e.target.value;
 });
 
