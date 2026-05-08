@@ -70,6 +70,112 @@ let dancePhase    = 0;
 let smoothEnergy  = 0;
 let currentVisual = 'aurora';
 
+// ── 波紋 ─────────────────────────────────────────────────────────────────────
+const ripples = [];
+
+function drawRipples(energy, color) {
+  if (Math.random() < 0.025 + energy * 0.08) {
+    ripples.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      r: 0, maxR: 60 + Math.random() * 130, speed: 0.4 + Math.random() * 0.7 });
+  }
+  for (let i = ripples.length - 1; i >= 0; i--) {
+    const rp = ripples[i];
+    rp.r += rp.speed + energy * 2;
+    const prog = rp.r / rp.maxR;
+    if (prog >= 1) { ripples.splice(i, 1); continue; }
+    const a = (1 - prog) * (0.55 + energy * 0.3);
+    for (let k = 0; k < 3; k++) {
+      const kr = rp.r * (1 - k * 0.13);
+      if (kr <= 0) continue;
+      canvasCtx.beginPath();
+      canvasCtx.arc(rp.x, rp.y, kr, 0, Math.PI * 2);
+      canvasCtx.strokeStyle = `rgba(${color},${a * (1 - k * 0.28)})`;
+      canvasCtx.lineWidth = 1.2 - k * 0.3;
+      canvasCtx.stroke();
+    }
+  }
+}
+
+// ── 流煙 ─────────────────────────────────────────────────────────────────────
+const smokeParticles = Array.from({ length: 70 }, () => ({
+  x: Math.random(), y: Math.random(),
+  r: 20 + Math.random() * 45,
+  vy: -(0.0008 + Math.random() * 0.0014),
+  ph: Math.random() * Math.PI * 2,
+  a: 0.04 + Math.random() * 0.10,
+}));
+
+function drawSmoke(energy, color) {
+  const W = canvas.width, H = canvas.height;
+  smokeParticles.forEach(p => {
+    p.ph += 0.007 + energy * 0.015;
+    p.y  += p.vy - energy * 0.0008;
+    if (p.y < -0.15) { p.y = 1.05; p.x = Math.random(); }
+    const sx = p.x * W + Math.sin(p.ph) * 28;
+    const sy = p.y * H;
+    const r  = p.r * (1 + energy * 0.4);
+    const a  = p.a + energy * 0.04;
+    const g  = canvasCtx.createRadialGradient(sx, sy, 0, sx, sy, r);
+    g.addColorStop(0, `rgba(${color},${a})`);
+    g.addColorStop(1, `rgba(${color},0)`);
+    canvasCtx.fillStyle = g;
+    canvasCtx.beginPath();
+    canvasCtx.arc(sx, sy, r, 0, Math.PI * 2);
+    canvasCtx.fill();
+  });
+}
+
+// ── 深海 ─────────────────────────────────────────────────────────────────────
+const deepParticles = Array.from({ length: 100 }, () => ({
+  x: Math.random(), y: Math.random(),
+  r: 1 + Math.random() * 2,
+  vy: -(0.0002 + Math.random() * 0.0005),
+  vx: (Math.random() - 0.5) * 0.0003,
+  ph: Math.random() * Math.PI * 2,
+  a: 0.25 + Math.random() * 0.5,
+}));
+
+function drawDeepSea(energy, phase) {
+  const W = canvas.width, H = canvas.height;
+  const hue = getModeHue();
+  // 光の柱
+  for (let i = 0; i < 5; i++) {
+    const rx = (0.1 + i * 0.2) * W;
+    const rw = 22 + Math.sin(phase * 0.3 + i * 1.1) * 10;
+    const ra = 0.04 + Math.sin(phase * 0.4 + i * 1.3) * 0.02 + energy * 0.04;
+    const g  = canvasCtx.createLinearGradient(rx, 0, rx, H * 0.75);
+    g.addColorStop(0, `hsla(${hue + i * 12},70%,72%,${ra})`);
+    g.addColorStop(1, `hsla(${hue + i * 12},70%,55%,0)`);
+    canvasCtx.fillStyle = g;
+    canvasCtx.beginPath();
+    canvasCtx.moveTo(rx - rw, 0);
+    canvasCtx.lineTo(rx + rw, 0);
+    canvasCtx.lineTo(rx + rw * 0.25, H * 0.75);
+    canvasCtx.lineTo(rx - rw * 0.25, H * 0.75);
+    canvasCtx.fill();
+  }
+  // 発光粒子
+  deepParticles.forEach(p => {
+    p.ph += 0.012;
+    p.x  += p.vx + Math.sin(p.ph) * 0.00018;
+    p.y  += p.vy;
+    if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+    if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+    const pulse = (Math.sin(p.ph * 2) + 1) * 0.5;
+    const a = p.a * (0.4 + pulse * 0.6) * (1 + energy * 0.5);
+    const r = p.r * (1 + pulse * 0.5 + energy * 0.3);
+    const h2 = (hue + pulse * 40) % 360;
+    canvasCtx.beginPath();
+    canvasCtx.arc(p.x * W, p.y * H, r, 0, Math.PI * 2);
+    canvasCtx.fillStyle = `hsla(${h2},85%,78%,${a})`;
+    canvasCtx.fill();
+    canvasCtx.beginPath();
+    canvasCtx.arc(p.x * W, p.y * H, r * 4.5, 0, Math.PI * 2);
+    canvasCtx.fillStyle = `hsla(${h2},85%,78%,${a * 0.07})`;
+    canvasCtx.fill();
+  });
+}
+
 // ── 星空 ────────────────────────────────────────────────────────────────────
 const stars = Array.from({ length: 150 }, () => ({
   x: Math.random(), y: Math.random(),
@@ -196,11 +302,11 @@ function drawFrame() {
     dancePhase   += 0.006;
   }
 
-  if (currentVisual === 'stars') {
-    drawStarfield(smoothEnergy, color);
-  } else {
-    drawAurora(smoothEnergy, dancePhase);
-  }
+  if      (currentVisual === 'stars')  drawStarfield(smoothEnergy, color);
+  else if (currentVisual === 'ripple') drawRipples(smoothEnergy, color);
+  else if (currentVisual === 'smoke')  drawSmoke(smoothEnergy, color);
+  else if (currentVisual === 'deep')   drawDeepSea(smoothEnergy, dancePhase);
+  else                                 drawAurora(smoothEnergy, dancePhase);
 }
 
 // ── Music ──────────────────────────────────────────────────────────────────
