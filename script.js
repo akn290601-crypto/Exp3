@@ -131,7 +131,6 @@ const deepParticles = Array.from({ length: 100 }, () => ({
 function drawDeepSea(energy, phase) {
   const W = canvas.width, H = canvas.height;
   const hue = getModeHue();
-  // 光の柱
   for (let i = 0; i < 5; i++) {
     const rx = (0.1 + i * 0.2) * W;
     const rw = 22 + Math.sin(phase * 0.3 + i * 1.1) * 10;
@@ -147,7 +146,6 @@ function drawDeepSea(energy, phase) {
     canvasCtx.lineTo(rx - rw * 0.25, H * 0.75);
     canvasCtx.fill();
   }
-  // 発光粒子
   deepParticles.forEach(p => {
     p.ph += 0.012;
     p.x  += p.vx + Math.sin(p.ph) * 0.00018;
@@ -228,15 +226,12 @@ function drawAurora(energy, phase) {
   [[0.25, 0.28, 1.0], [0.45, 0.22, 0.65], [0.62, 0.16, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
     const bp = phase * phaseScale + b * 2.1;
     const waveAmp = H * (amp + energy * 0.15);
-
     const getY = (x) => {
       const t = x / W;
       return H * baseY
         + Math.sin(t * Math.PI * 3.5 + bp) * waveAmp
         + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
     };
-
-    // fill from wave downward to bottom of canvas
     canvasCtx.beginPath();
     canvasCtx.moveTo(0, H);
     canvasCtx.lineTo(0, getY(0));
@@ -248,7 +243,6 @@ function drawAurora(energy, phase) {
     }
     canvasCtx.lineTo(W, H);
     canvasCtx.closePath();
-
     const hue = (baseHue + b * 28 + phase * 6) % 360;
     const sat = 65 + energy * 25;
     const fa  = 0.38 + energy * 0.25 - b * 0.06;
@@ -259,8 +253,6 @@ function drawAurora(energy, phase) {
     grad.addColorStop(1,   `hsla(${hue},${sat}%,55%,0.0)`);
     canvasCtx.fillStyle = grad;
     canvasCtx.fill();
-
-    // glowing wave edge line
     canvasCtx.beginPath();
     px = 0; py = getY(0);
     canvasCtx.moveTo(0, py);
@@ -281,15 +273,12 @@ function drawAuroraUp(energy, phase) {
   [[0.75, 0.28, 1.0], [0.55, 0.22, 0.65], [0.38, 0.16, 0.40]].forEach(([baseY, amp, phaseScale], b) => {
     const bp = phase * phaseScale + b * 2.1;
     const waveAmp = H * (amp + energy * 0.15);
-
     const getY = (x) => {
       const t = x / W;
       return H * baseY
         + Math.sin(t * Math.PI * 3.5 + bp) * waveAmp
         + Math.sin(t * Math.PI * 6.2 - bp * 0.7) * waveAmp * 0.35;
     };
-
-    // fill from wave upward to top of canvas
     canvasCtx.beginPath();
     canvasCtx.moveTo(0, 0);
     canvasCtx.lineTo(0, getY(0));
@@ -301,7 +290,6 @@ function drawAuroraUp(energy, phase) {
     }
     canvasCtx.lineTo(W, 0);
     canvasCtx.closePath();
-
     const hue = (baseHue + b * 28 + phase * 6) % 360;
     const sat = 65 + energy * 25;
     const fa  = 0.38 + energy * 0.25 - b * 0.06;
@@ -312,8 +300,6 @@ function drawAuroraUp(energy, phase) {
     grad.addColorStop(1,   `hsla(${hue},${sat}%,55%,0.0)`);
     canvasCtx.fillStyle = grad;
     canvasCtx.fill();
-
-    // glowing wave edge line
     canvasCtx.beginPath();
     px = 0; py = getY(0);
     canvasCtx.moveTo(0, py);
@@ -356,8 +342,6 @@ function drawFrame() {
   else if (currentVisual === 'grid')     drawGrid(smoothEnergy, dancePhase);
   else if (currentVisual === 'luxury')   drawLuxury(smoothEnergy, dancePhase);
   else if (currentVisual === 'aurora-up') drawAuroraUp(smoothEnergy, dancePhase * 0.25);
-  else if (currentVisual === 'matrix')   drawMatrix(smoothEnergy, dancePhase);
-  else if (currentVisual === 'fire')     drawFire(smoothEnergy, dancePhase);
   else                                    drawAurora(smoothEnergy, dancePhase * 0.25);
 }
 
@@ -444,7 +428,6 @@ function drawGrid(energy, phase) {
   const vx = W / 2, vy = H * 0.42;
   const base = 0.45 + energy * 0.2;
 
-  // 収束線
   for (let i = 0; i < 18; i++) {
     const angle = (i / 18) * Math.PI * 2;
     const ex = vx + Math.cos(angle) * W * 1.2;
@@ -457,7 +440,6 @@ function drawGrid(energy, phase) {
     canvasCtx.stroke();
   }
 
-  // 外へ広がる楕円リング
   const offset = (phase * (0.25 + energy * 0.2)) % 1;
   for (let i = 0; i < 9; i++) {
     const t = ((i / 9) + offset) % 1;
@@ -471,7 +453,6 @@ function drawGrid(energy, phase) {
     canvasCtx.stroke();
   }
 
-  // 音楽連動フラッシュリング
   if (energy > 0.12 && Math.random() < energy * 0.12) {
     gridFlashes.push({ r: 0, al: 1.0 });
   }
@@ -516,7 +497,6 @@ function drawLuxury(energy, phase) {
     const r  = p.r * (1 + pulse * 0.3 + energy * 0.4);
     const px = p.x * W, py = p.y * H;
 
-    // 金の輝き（十字グリント）
     if (r > 2) {
       const len = r * (3 + pulse * 3);
       canvasCtx.save();
@@ -534,129 +514,22 @@ function drawLuxury(energy, phase) {
       canvasCtx.restore();
     }
 
-    // コア
     canvasCtx.beginPath();
     canvasCtx.arc(px, py, r, 0, Math.PI * 2);
     canvasCtx.fillStyle = `rgba(255,215,${80 + pulse * 60},${a})`;
     canvasCtx.fill();
 
-    // 光輪
     canvasCtx.beginPath();
     canvasCtx.arc(px, py, r * 5, 0, Math.PI * 2);
     canvasCtx.fillStyle = `rgba(255,200,60,${a * 0.06})`;
     canvasCtx.fill();
   });
 
-  // 薄いゴールドグラデーション背景
   const grad = canvasCtx.createRadialGradient(W / 2, H * 0.5, 0, W / 2, H * 0.5, Math.max(W, H) * 0.7);
   grad.addColorStop(0, `rgba(120,85,20,${0.06 + energy * 0.06})`);
   grad.addColorStop(1, `rgba(60,40,10,0)`);
   canvasCtx.fillStyle = grad;
   canvasCtx.fillRect(0, 0, W, H);
-}
-
-// ── マトリックス ───────────────────────────────────────────────────────────────
-const MATRIX_CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789ABCDEF';
-const matrixState = { cols: [], lastW: 0, lastH: 0 };
-
-function ensureMatrix() {
-  const W = canvas.width, H = canvas.height;
-  if (matrixState.lastW === W && matrixState.lastH === H) return;
-  matrixState.lastW = W; matrixState.lastH = H;
-  const colW = 18;
-  const cols = Math.floor(W / colW);
-  matrixState.cols = Array.from({ length: cols }, (_, i) => ({
-    x: i * colW + colW * 0.5,
-    head: -Math.random() * 40,
-    speed: 0.15 + Math.random() * 0.25,
-    length: 10 + Math.floor(Math.random() * 14),
-  }));
-}
-
-function drawMatrix(energy, phase) {
-  const W = canvas.width, H = canvas.height;
-  ensureMatrix();
-  const rowH = 18;
-  const rows = Math.ceil(H / rowH) + 2;
-  const speedMult = 1 + energy * 3;
-
-  canvasCtx.font = `${rowH - 3}px monospace`;
-  canvasCtx.textAlign = 'center';
-  canvasCtx.textBaseline = 'top';
-
-  matrixState.cols.forEach(col => {
-    col.head += col.speed * speedMult;
-    if (col.head - col.length > rows) {
-      col.head = -5 - Math.random() * 20;
-      col.speed = 0.15 + Math.random() * 0.25;
-      col.length = 10 + Math.floor(Math.random() * 14);
-    }
-    const headRow = Math.floor(col.head);
-    for (let i = 0; i < col.length; i++) {
-      const row = headRow - i;
-      if (row < 0 || row >= rows) continue;
-      const char = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
-      if (i === 0) {
-        canvasCtx.fillStyle = 'rgba(220,255,220,0.98)';
-      } else {
-        const fade = Math.pow(1 - i / col.length, 1.4);
-        canvasCtx.fillStyle = `rgba(0,210,65,${fade * 0.85})`;
-      }
-      canvasCtx.fillText(char, col.x, row * rowH);
-    }
-  });
-
-  canvasCtx.textAlign = 'left';
-  canvasCtx.textBaseline = 'alphabetic';
-}
-
-// ── 焚き火 ─────────────────────────────────────────────────────────────────
-const fireParticles = [];
-
-function drawFire(energy, phase) {
-  const W = canvas.width, H = canvas.height;
-  const cx = W * 0.5;
-  const base = H * 0.82;
-
-  // spawn
-  const spawnCount = 4 + Math.floor(energy * 10);
-  for (let i = 0; i < spawnCount; i++) {
-    fireParticles.push({
-      x:     cx + (Math.random() - 0.5) * W * 0.12,
-      y:     base + Math.random() * H * 0.04,
-      vx:    (Math.random() - 0.5) * 1.4,
-      vy:    -(2 + Math.random() * 3.5),
-      life:  1.0,
-      decay: 0.009 + Math.random() * 0.013,
-      size:  5 + Math.random() * 9,
-      hue:   8 + Math.random() * 38,
-    });
-  }
-
-  // update & draw
-  for (let i = fireParticles.length - 1; i >= 0; i--) {
-    const p = fireParticles[i];
-    p.x  += p.vx + Math.sin(phase * 2.5 + p.y * 0.015) * 0.5;
-    p.y  += p.vy;
-    p.vy *= 0.985;
-    p.vx *= 0.97;
-    p.life  -= p.decay;
-    p.size  *= 0.996;
-    if (p.life <= 0 || p.size < 0.5) { fireParticles.splice(i, 1); continue; }
-
-    const r = p.size * p.life;
-    const grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-    const lum = 55 + p.life * 20;
-    grad.addColorStop(0,   `hsla(${p.hue + 20},100%,${lum}%,${p.life * 0.9})`);
-    grad.addColorStop(0.5, `hsla(${p.hue},95%,${lum - 10}%,${p.life * 0.5})`);
-    grad.addColorStop(1,   `hsla(${p.hue},90%,30%,0)`);
-    canvasCtx.beginPath();
-    canvasCtx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    canvasCtx.fillStyle = grad;
-    canvasCtx.fill();
-  }
-
-  if (fireParticles.length > 500) fireParticles.splice(0, fireParticles.length - 500);
 }
 
 // ── Music ──────────────────────────────────────────────────────────────────
