@@ -28,8 +28,7 @@ const resetBtn      = document.getElementById('resetBtn');
 const countEl       = document.getElementById('count');
 const canvas        = document.getElementById('visualizer');
 const canvasCtx     = canvas.getContext('2d');
-const progressFill  = document.getElementById('progressFill');
-const RING_C        = 2 * Math.PI * 128; // circumference for r=128
+ // circumference for r=128
 
 // ── Audio Context & Analyser ───────────────────────────────────────────────
 let audioCtx = null;
@@ -703,11 +702,6 @@ function renderTime() {
   const s = (secondsLeft % 60).toString().padStart(2, '0');
   timeEl.textContent = `${m}:${s}`;
   document.title = `${m}:${s} — ポモドーロタイマー`;
-  if (progressFill) {
-    const progress = secondsLeft / MODES[currentMode].seconds;
-    progressFill.style.strokeDasharray  = RING_C;
-    progressFill.style.strokeDashoffset = RING_C * (1 - progress);
-  }
 }
 
 // Initialize
