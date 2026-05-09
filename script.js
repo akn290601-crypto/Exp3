@@ -356,8 +356,6 @@ function drawFrame() {
   else if (currentVisual === 'grid')     drawGrid(smoothEnergy, dancePhase);
   else if (currentVisual === 'luxury')   drawLuxury(smoothEnergy, dancePhase);
   else if (currentVisual === 'aurora-up') drawAuroraUp(smoothEnergy, dancePhase * 0.25);
-  else if (currentVisual === 'matrix')   drawMatrix(smoothEnergy, dancePhase);
-  else if (currentVisual === 'fire')     drawFire(smoothEnergy, dancePhase);
   else                                    drawAurora(smoothEnergy, dancePhase * 0.25);
 }
 
@@ -553,110 +551,6 @@ function drawLuxury(energy, phase) {
   grad.addColorStop(1, `rgba(60,40,10,0)`);
   canvasCtx.fillStyle = grad;
   canvasCtx.fillRect(0, 0, W, H);
-}
-
-// ── マトリックス ───────────────────────────────────────────────────────────────
-const MATRIX_CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789ABCDEF';
-const matrixState = { cols: [], lastW: 0, lastH: 0 };
-
-function ensureMatrix() {
-  const W = canvas.width, H = canvas.height;
-  if (matrixState.lastW === W && matrixState.lastH === H) return;
-  matrixState.lastW = W; matrixState.lastH = H;
-  const colW = 18;
-  const cols = Math.floor(W / colW);
-  matrixState.cols = Array.from({ length: cols }, (_, i) => ({
-    x: i * colW + colW * 0.5,
-    head: -Math.random() * 40,
-    speed: 0.15 + Math.random() * 0.25,
-    length: 10 + Math.floor(Math.random() * 14),
-  }));
-}
-
-function drawMatrix(energy, phase) {
-  const W = canvas.width, H = canvas.height;
-  ensureMatrix();
-  const rowH = 18;
-  const rows = Math.ceil(H / rowH) + 2;
-  const speedMult = 1 + energy * 3;
-
-  canvasCtx.font = `${rowH - 3}px monospace`;
-  canvasCtx.textAlign = 'center';
-  canvasCtx.textBaseline = 'top';
-
-  matrixState.cols.forEach(col => {
-    col.head += col.speed * speedMult;
-    if (col.head - col.length > rows) {
-      col.head = -5 - Math.random() * 20;
-      col.speed = 0.15 + Math.random() * 0.25;
-      col.length = 10 + Math.floor(Math.random() * 14);
-    }
-    const headRow = Math.floor(col.head);
-    for (let i = 0; i < col.length; i++) {
-      const row = headRow - i;
-      if (row < 0 || row >= rows) continue;
-      const char = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
-      if (i === 0) {
-        canvasCtx.fillStyle = 'rgba(220,255,220,0.98)';
-      } else {
-        const fade = Math.pow(1 - i / col.length, 1.4);
-        canvasCtx.fillStyle = `rgba(0,210,65,${fade * 0.85})`;
-      }
-      canvasCtx.fillText(char, col.x, row * rowH);
-    }
-  });
-
-  canvasCtx.textAlign = 'left';
-  canvasCtx.textBaseline = 'alphabetic';
-}
-
-// ── 焚き火 ─────────────────────────────────────────────────────────────────
-const fireParticles = [];
-
-function drawFire(energy, phase) {
-  const W = canvas.width, H = canvas.height;
-  const cx = W * 0.5;
-  const base = H * 0.82;
-
-  // spawn
-  const spawnCount = 4 + Math.floor(energy * 10);
-  for (let i = 0; i < spawnCount; i++) {
-    fireParticles.push({
-      x:     cx + (Math.random() - 0.5) * W * 0.12,
-      y:     base + Math.random() * H * 0.04,
-      vx:    (Math.random() - 0.5) * 1.4,
-      vy:    -(2 + Math.random() * 3.5),
-      life:  1.0,
-      decay: 0.009 + Math.random() * 0.013,
-      size:  5 + Math.random() * 9,
-      hue:   8 + Math.random() * 38,
-    });
-  }
-
-  // update & draw
-  for (let i = fireParticles.length - 1; i >= 0; i--) {
-    const p = fireParticles[i];
-    p.x  += p.vx + Math.sin(phase * 2.5 + p.y * 0.015) * 0.5;
-    p.y  += p.vy;
-    p.vy *= 0.985;
-    p.vx *= 0.97;
-    p.life  -= p.decay;
-    p.size  *= 0.996;
-    if (p.life <= 0 || p.size < 0.5) { fireParticles.splice(i, 1); continue; }
-
-    const r = p.size * p.life;
-    const grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-    const lum = 55 + p.life * 20;
-    grad.addColorStop(0,   `hsla(${p.hue + 20},100%,${lum}%,${p.life * 0.9})`);
-    grad.addColorStop(0.5, `hsla(${p.hue},95%,${lum - 10}%,${p.life * 0.5})`);
-    grad.addColorStop(1,   `hsla(${p.hue},90%,30%,0)`);
-    canvasCtx.beginPath();
-    canvasCtx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    canvasCtx.fillStyle = grad;
-    canvasCtx.fill();
-  }
-
-  if (fireParticles.length > 500) fireParticles.splice(0, fireParticles.length - 500);
 }
 
 // ── Music ──────────────────────────────────────────────────────────────────
